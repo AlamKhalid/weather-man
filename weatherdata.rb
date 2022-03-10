@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class WeatherData
   # values can only be read
   attr_reader :date, :max_temp, :min_temp, :avg_temp, :max_humid, :min_humid, :avg_humid
