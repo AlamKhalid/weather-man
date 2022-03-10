@@ -45,7 +45,7 @@ class WeatherMan
 
   def flag_e_code(string_year_month, year, month)
     # first load data
-    data = load_data(cmd_line_args[2], year, month)
+    data = load_data(string_year_month, year, month)
     # then print
     show_highest_lowest_temp(data)
   end
