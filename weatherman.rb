@@ -11,16 +11,14 @@ class WeatherMan
   # main driver program
   def start_program(cmd_line_args)
     if cmd_line_args.length == 3
-      # get month and year separated from command line
-      get_directory_year_month(cmd_line_args)
       # case on flag value: -e, -a, -c
       case cmd_line_args[0]
       when '-e'
-        flag_e_code
+        flag_e_code(cmd_line_args)
       when '-a'
-        flag_a_code
+        flag_a_code(cmd_line_args)
       when '-c'
-        flag_c_code
+        flag_c_code(cmd_line_args)
       else
         # default case
         # invalid choice case
@@ -41,29 +39,31 @@ class WeatherMan
 
   private
 
-  def flag_e_code
+  def flag_e_code(cmd_line_args)
     # first load data
-    data = load_data
+    data = load_data(cmd_line_args)
     # then print
     show_highest_lowest_temp(data)
   end
 
-  def flag_a_code
+  def flag_a_code(cmd_line_args)
+    _, month_str = separate_dates(cmd_line_args[1])
     # since month is necessary for this, check if it is provided or not
-    return unless month_provided?
+    return unless month_provided?(month_str)
 
     # first load data then print
-    data = load_data
+    data = load_data(cmd_line_args)
     show_avg_temp(data)
   end
 
-  def flag_c_code
+  def flag_c_code(cmd_line_args)
+    _, month_str = separate_dates(cmd_line_args[1])
     # since month is necessary for this, check if it is provided or not
-    return unless month_provided?
+    return unless month_provided?(month_str)
 
     # first load data then print
-    data = load_data
-    show_horizontal_chart(data)
+    data = load_data(cmd_line_args)
+    show_horizontal_chart(data, cmd_line_args[1])
   end
 
   def show_highest_lowest_temp(data)
@@ -108,8 +108,9 @@ class WeatherMan
     puts str_output
   end
 
-  def show_horizontal_chart(data)
-    puts "#{Date::MONTHNAMES[@month_str.to_i]} #{@year}"
+  def show_horizontal_chart(data, date)
+    year, month_str = separate_dates(date)
+    puts "#{Date::MONTHNAMES[month_str.to_i]} #{year}"
     data.each do |d|
       # max temperature
       draw_bars(d, :max_temp, :red)
