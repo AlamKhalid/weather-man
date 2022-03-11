@@ -31,12 +31,12 @@ module Utility
     year, month = date.split('/')
     return [year, ''] if month.nil?
 
-    [year, month.to_i]
+    [year, month]
   end
 
   # check if month is provided for -a -c
-  def month_provided?(month_int)
-    if month_int.to_s.length.zero?
+  def month_provided?(month_str)
+    if month_str.length.zero?
       puts 'Please provide month along with year in following format: 2002/06'
       return false
     end

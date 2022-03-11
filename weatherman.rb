@@ -12,17 +12,17 @@ class WeatherMan
   def start_program(cmd_line_args)
     if cmd_line_args.length == 3
       # get month and year separated from command line
-      year, month_int = separate_dates(cmd_line_args[1])
+      year, month_str = separate_dates(cmd_line_args[1])
       # get abbrevated month name from int value
-      month = Date::ABBR_MONTHNAMES[month_int] if month_int.to_s.length.positive?
+      month_abbr = Date::ABBR_MONTHNAMES[month_str.to_i] if month_str.length.positive?
       # case on flag value: -e, -a, -c
       case cmd_line_args[0]
       when '-e'
-        flag_e_code(cmd_line_args[2], year, month)
+        flag_e_code(cmd_line_args[2], year, month_abbr)
       when '-a'
-        flag_a_code(cmd_line_args[2], month_int, year, month)
+        flag_a_code(cmd_line_args[2], month_str, year, month_abbr)
       when '-c'
-        flag_c_code(cmd_line_args[2], month_int, year, month)
+        flag_c_code(cmd_line_args[2], month_str, year, month_abbr)
       else
         # default case
         # invalid choice case
@@ -43,29 +43,29 @@ class WeatherMan
 
   private
 
-  def flag_e_code(string_year_month, year, month)
+  def flag_e_code(string_year_month, year, month_abbr)
     # first load data
-    data = load_data(string_year_month, year, month)
+    data = load_data(string_year_month, year, month_abbr)
     # then print
     show_highest_lowest_temp(data)
   end
 
-  def flag_a_code(string_year_month, month_int, year, month)
+  def flag_a_code(string_year_month, month_str, year, month_abbr)
     # since month is necessary for this, check if it is provided or not
-    return unless month_provided?(month_int)
+    return unless month_provided?(month_str)
 
     # first load data then print
-    data = load_data(string_year_month, year, month)
+    data = load_data(string_year_month, year, month_abbr)
     show_avg_temp(data)
   end
 
-  def flag_c_code(string_year_month, month_int, year, month)
+  def flag_c_code(string_year_month, month_str, year, month_abbr)
     # since month is necessary for this, check if it is provided or not
-    return unless month_provided?(month_int)
+    return unless month_provided?(month_str)
 
     # first load data then print
-    data = load_data(string_year_month, year, month)
-    show_horizontal_chart(data, month_int, year)
+    data = load_data(string_year_month, year, month_abbr)
+    show_horizontal_chart(data, month_str, year)
   end
 
   def show_highest_lowest_temp(data)
@@ -110,8 +110,8 @@ class WeatherMan
     puts str_output
   end
 
-  def show_horizontal_chart(data, month_int, year)
-    puts "#{Date::MONTHNAMES[month_int]} #{year}"
+  def show_horizontal_chart(data, month_str, year)
+    puts "#{Date::MONTHNAMES[month_str.to_i]} #{year}"
     data.each do |d|
       # max temperature
       draw_bars(d, :max_temp, :red)
