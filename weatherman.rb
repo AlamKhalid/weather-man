@@ -12,17 +12,15 @@ class WeatherMan
   def start_program(cmd_line_args)
     if cmd_line_args.length == 3
       # get month and year separated from command line
-      year, month_str = separate_dates(cmd_line_args[1])
-      # get abbrevated month name from int value
-      month_abbr = Date::ABBR_MONTHNAMES[month_str.to_i] if month_str.length.positive?
+      get_directory_year_month(cmd_line_args)
       # case on flag value: -e, -a, -c
       case cmd_line_args[0]
       when '-e'
-        flag_e_code(cmd_line_args[2], year, month_abbr)
+        flag_e_code
       when '-a'
-        flag_a_code(cmd_line_args[2], month_str, year, month_abbr)
+        flag_a_code
       when '-c'
-        flag_c_code(cmd_line_args[2], month_str, year, month_abbr)
+        flag_c_code
       else
         # default case
         # invalid choice case
@@ -43,29 +41,29 @@ class WeatherMan
 
   private
 
-  def flag_e_code(string_year_month, year, month_abbr)
+  def flag_e_code
     # first load data
-    data = load_data(string_year_month, year, month_abbr)
+    data = load_data
     # then print
     show_highest_lowest_temp(data)
   end
 
-  def flag_a_code(string_year_month, month_str, year, month_abbr)
+  def flag_a_code
     # since month is necessary for this, check if it is provided or not
-    return unless month_provided?(month_str)
+    return unless month_provided?
 
     # first load data then print
-    data = load_data(string_year_month, year, month_abbr)
+    data = load_data
     show_avg_temp(data)
   end
 
-  def flag_c_code(string_year_month, month_str, year, month_abbr)
+  def flag_c_code
     # since month is necessary for this, check if it is provided or not
-    return unless month_provided?(month_str)
+    return unless month_provided?
 
     # first load data then print
-    data = load_data(string_year_month, year, month_abbr)
-    show_horizontal_chart(data, month_str, year)
+    data = load_data
+    show_horizontal_chart(data)
   end
 
   def show_highest_lowest_temp(data)
@@ -110,8 +108,8 @@ class WeatherMan
     puts str_output
   end
 
-  def show_horizontal_chart(data, month_str, year)
-    puts "#{Date::MONTHNAMES[month_str.to_i]} #{year}"
+  def show_horizontal_chart(data)
+    puts "#{Date::MONTHNAMES[@month_str.to_i]} #{@year}"
     data.each do |d|
       # max temperature
       draw_bars(d, :max_temp, :red)
